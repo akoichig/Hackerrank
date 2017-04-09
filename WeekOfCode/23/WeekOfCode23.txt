@@ -1,0 +1,214 @@
+n = int(input().strip())
+tr = [int(s) for s in input().strip().split()] # [1 2 2 4]
+
+tree={1:[0,[j+2 for j in range(n-1) if tr[j]==1]]}     # child:[parent, [child's children]]
+data = {1:{}} # store calculations for future use'
+
+for i in range(n-1):
+    tree[i+2]=[tr[i], [j+2 for j in range(n-1) if tr[j]==i+2]]
+    data[i+2]={}
+    
+#print(tree)
+def Dist(lvl, node):
+    #global ANS
+    global data
+    try:
+        return data[node][lvl]
+    except KeyError:
+        s = 0
+        s += lvl**2
+        for child in tree[node][1]:
+            s += Dist(lvl+1,child)
+        data[node][lvl] = s            
+        return s            
+def ancestry(node):
+    global tree
+    gen = [node]
+    parent = tree[node][0]
+    while parent!=0:
+        gen.append(parent)
+        parent = tree[parent][0]
+    return gen # Note: len(gen)-1 is the level of node in the tree  
+
+q = int(input().strip()) # number of experiments
+
+if n==1:
+    for _ in range(q):
+        print(0)
+else:
+    for _ in range(q):
+        if n==1:
+
+            print(0)
+            break
+        u,v = input().strip().split()
+        u,v = [int(u), int(v)]
+        utree = ancestry(u)
+        vtree = ancestry(v)
+        ulevel = len(utree)-1
+        vlevel = len(vtree)-1
+        #print(utree)
+        #print(vtree)
+
+        ANS = 0
+        if ulevel < vlevel: # v comes later than u.  Is u an ancestor of v?
+            i = vlevel - ulevel
+            parent = v
+            while i>0:
+                parent = tree[parent][0]
+                i -= 1
+            if parent == u:
+                ANS += Dist(vlevel-ulevel, v) # Yes, u is ancestor of v
+            else: # parent is same level as but not equal to u. Find common ancestor of parent and u to get Distance(u,v)
+                i = ulevel
+                parentu = u
+                while parent != parentu:
+                    parent=tree[parent][0]
+                    parentu=tree[parentu][0]
+                    i -= 1            
+                ANS += Dist(ulevel+vlevel-2*i,v)
+        elif ulevel==vlevel:
+            i = ulevel
+            parent = v
+            parentu = u
+            while parent != parentu:
+                parent=tree[parent][0]
+                parentu=tree[parentu][0]
+                i -= 1            
+            ANS += Dist(2*(ulevel-i),v)
+        else: #vlevel < ulevel, so u comes later than v.  Is v an ancestor of u?
+            i = ulevel - vlevel
+            parent = u
+            while i>0:
+                parent = tree[parent][0]
+                i -= 1
+            if parent == v: # Yes, v is ancestor of u
+                ANS += Dist(0, u) # Sum forces for descendents of u
+                i = ulevel - vlevel
+                j=1
+                cur = u 
+                while j<=i:
+                    parent = tree[cur][0]
+                    ANS += j**2
+                    for child in tree[parent][1]:
+                        if child != cur:
+                            ANS += Dist(j+1,child) # Sum forces for all other active descendents of v
+                    cur = parent
+                    j += 1         
+            else: # parent is same level as but not equal to v. Find common ancestor of parent and v to get Distance(u,v)
+                i = vlevel
+                parentv = v
+                while parent != parentv:
+                    parent=tree[parent][0]
+                    parentv=tree[parentv][0]
+                    i -= 1            
+                ANS += Dist(ulevel+vlevel-2*i,v)
+        print(ANS)
+
+
+    # Is v an ancestor of u?
+    # Find common ancestor of u and v
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx
+
+
+
+class tree:
+    def __init__(self, parent, value=None):
+        self.parent = parent
+        self.value = value
+        self.children = []
+    def add_child(self, obj):
+        if parent != None:
+            parent.children.append(self)
+
+Figured it out, for those having an issue :
+5
+4 2 5 1
+3
+5 5
+2 5
+5 2
+output :
+14
+6
+13
+Now I need to improve all that as I'm falling in timeouts :D
+
+
+The Input-Format allows a tree with one Parent and n-1 Child-Nodes: e.q 1 1 1 1 One root and 4 Child-Nodes connected to the root.
+
+two testcases(maybe not #3):
+5
+1 2 2 2
+1
+5 1
+
+answer:
+13
+
+5
+1 2 3 1
+1
+4 3
+
+answer:
+1
+
+
+
+xxxxxxxxxxxxxxxxxxxxxx
+1 1 2 2 3 3
+3 4
+
+
+xxxxxxxxxxxxx
+5
+1 2 2 4
+1
+3 1
+ANS = 18?
+
+xxxxxxxxxxxxxxxx
+5
+1 2 3 3
+3
+3 3
+2 2
+2 5
+ANS = 2 9 4?
+
+
+xxxxxxxxxxxxxxx
+5 
+1 2 3 3 
+1 
+4 5 
+ANS = 4?
+
+SUCCESS: 0 - 5, 8, 14
+TIMEOUT: 6,7, 9-13
+
+SUCCESS: 0 - 10, 12, 14, 15 
+TIMEOUT: 11, 13, 16 - 21 TERMINATED
+
+SUCCESS: 0 - 10, 12, 14, 15 
+TIMEOUT: 11, 13, 16 - 21 TERMINATED
+
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx
+
+SASHA AND THE SWAPS 2 https://www.hackerrank.com/contests/w23/challenges/sasha-and-swaps-ii
+
+ - Resources & Efficient algorithms for integer partitions (Useful in counting disjoint cycle structures of permutations ?):
+  	http://stackoverflow.com/questions/10035752/elegant-python-code-for-integer-partitioning
+ 	http://jeromekelleher.net/generating-integer-partitions.html
+	http://stackoverflow.com/questions/18503096/python-integer-partitioning-with-given-k-partitions (with memoization)
+	http://code.activestate.com/recipes/218332-generator-for-integer-partitions/
+	http://www.programminglogic.com/integer-partition-algorithm/
+	
+	
+
+
+
+

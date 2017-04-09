@@ -1,0 +1,58 @@
+https://www.hackerrank.com/contests/projecteuler/submissions/grouped
+
+
+
+
+
+Project Euler #14: Longest Collatz sequence
+	URL: https://www.hackerrank.com/contests/projecteuler/challenges/euler014/submissions
+	Score: 38.46
+	Notes: Use c++ or java?, memoize and cache with array
+
+Project Euler # 19 Counting Sundays
+	URL: https://www.hackerrank.com/contests/projecteuler/challenges/euler019/submissions
+	Score: 28.57
+	Notes: Watch out for logic of under/over countings Sundays
+
+	Input (stdin)
+	4
+	1988 3 25
+	1989 7 13
+	1924 6 6
+	1925 6 16
+	1000000000000 2 2
+	1000000001000 3 2
+	2015 2 1
+	2015 3 1
+
+	Your Output
+	2
+	3
+	1720
+	0
+
+	SHOULD BE: 2 2 1720 2
+
+Project Euler # 20 Amicable Numbers
+	URL:
+	Score:
+	Notes: Compute d[b] direclty when b is "large".  Use C++.
+
+
+COMPLETED:
+Project Euler #10: Summation of primes
+	URL: https://www.hackerrank.com/contests/projecteuler/challenges/euler010/submissions
+	Score: 85.71
+	Notes: Use c++ or java? Implement SIEVE OF ERATOSTHENES?
+
+Project Euler #12: Highly divisible triangular number
+	URL: https://www.hackerrank.com/contests/projecteuler/challenges/euler012/submissions
+	Score: 29.23
+	Notes: Use c++ or java? 
+	Hint: for n =1000 , we have 842161320 as our triangular number which is ( (41040)*(41040 +1))/2 
+	Notes: Triangular numbers factor into two obvious relatively prime numbers.  I calculated the numDiv for every integer below 42000. Passed all cases.
+
+
+
+
+
